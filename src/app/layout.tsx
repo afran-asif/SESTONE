@@ -5,7 +5,7 @@ import Link from "next/link"; // নেভিগেশনের জন্য Lin
 import Navbar from "@/components/Navbar";
 import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/CartDrawer";
-
+import { Toaster } from "react-hot-toast";
 // ফন্ট সেটআপ (Next.js এর ডিফল্ট)
 const geistSans = Geist({
   subsets: ["latin"],
@@ -38,6 +38,7 @@ export default function RootLayout({
           <CartProvider>
             <Navbar />
             <CartDrawer />
+            <Toaster position="top-center" reverseOrder={false}/>
             {children}
             
           </CartProvider>
