@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import { Toaster } from "react-hot-toast";
+import ShopPage from "./shop/page";
 // ফন্ট সেটআপ (Next.js এর ডিফল্ট)
 const geistSans = Geist({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout({
         <div className="min-h-screen bg-orange">
           <CartProvider>
             <Navbar />
+            {/* <ShopPage /> */}
             <CartDrawer />
             <Toaster position="top-center" reverseOrder={false}/>
             {children}

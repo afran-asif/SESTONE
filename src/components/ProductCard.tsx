@@ -1,17 +1,26 @@
-import { Product } from "@/types";
-
+import { Product } from "@/lib/data";
+import Link from "next/link";
 interface props {
     product: Product;
 }
 
 const ProductCard = ({ product }: props )=> {
     return(
-        <div>
-            <img src={product.image} alt={product.title} />
-            <h2>{product.title}</h2>
-            <p>{product.price}</p>
-            <button>Add to Cart</button>
-        </div>
+        <div key={product.id} className="bg-white p-5 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col justify-between">
+            <div>
+              <img src={product.image} alt={product.title} className="h-48 w-full object-contain mb-4" />
+              <p className="text-xs text-blue-500 font-semibold uppercase tracking-wider mb-2">{product.category}</p>
+              <h2 className="text-sm font-bold text-gray-700 truncate mb-2">{product.title}</h2>
+            </div>
+            <div className="flex justify-between items-center mt-4">
+              <span className="text-lg font-black text-gray-900">৳{product.price}</span>
+              <Link href={`/product/${product.id}`}>
+                <button className="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
+                  View Details
+                </button>
+              </Link>
+            </div>
+          </div>
     );
 };
 

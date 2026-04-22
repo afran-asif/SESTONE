@@ -19,13 +19,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setCart((prevCart) => prevCart.filter((item) => item.id !== id));
     }
     const addToCart = (product: Product) => {
-        setCart((prevCart) => {
-            const isExist = prevCart.find(item => item.id === product.id);
-            if(isExist){
-                return [...prevCart, product]
-            }
-            return [...prevCart, product] 
-        });
+        setCart((prevCart) => 
+            [...prevCart, product]
+        );
+            setIsCartOpen(true);
     }
 
     return(
