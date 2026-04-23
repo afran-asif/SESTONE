@@ -20,8 +20,8 @@ const AddToCart = ({product} : {product : Product}) => {
         })
     }
     return(
-        <button onClick={ handleAddToCart } className="w-full bg-black text-white py-4 rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg active:scale-95" >
-            Add to Bag
+        <button onClick={ handleAddToCart } className="w-full bg-white text-black py-4 rounded-xl font-bold hover:bg-green-600 hover:text-white transition-all shadow-lg active:scale-95" >
+            Add to Cart
         </button>
     );
 };

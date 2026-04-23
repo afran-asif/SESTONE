@@ -15,7 +15,7 @@ export default function ShopPage() {
     return (
         <div className="max-w-7xl mx-auto px-6 py-12">
             <div className="text-center mb-12">
-                <h1 className="text-4xl font-black tracking-tighter mb-4 uppercase">Sestone collection</h1>
+                <h1 className="text-4xl font-black text-black tracking-tighter mb-4 uppercase">Sestone collection</h1>
                 <p className="text-gray-500">Discover your style from our premium streetwear and outfits.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-3 mb-12">
@@ -31,7 +31,7 @@ export default function ShopPage() {
                 ))}
             </div>
             {filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-10">
                     {filteredProducts.map((product) => (
                         <ProductCard key={product.id} product={product} />
                     ))}

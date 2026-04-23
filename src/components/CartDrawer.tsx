@@ -4,23 +4,23 @@ import { useCart } from "@/context/CartContext";
 const CartDrawer = () => {
     const { cart, isCartOpen, setIsCartOpen, removeFromCart } = useCart();
 
-    if (!isCartOpen) return null; // ড্রয়ার বন্ধ থাকলে কিছুই দেখাবে না
+    if (!isCartOpen) return null;
 
     return (
         <div className="fixed inset-0 z-[100] flex justify-end">
-            {/* ব্যাকগ্রাউন্ড কালো ছায়া */}
+            
             <div className="fixed inset-0 bg-black/50" onClick={() => setIsCartOpen(false)} />
 
-            {/* সাদা ড্রয়ার প্যানেল */}
+
             <div className="relative w-80 sm:w-96 bg-white h-full shadow-2xl p-6 flex flex-col animate-in slide-in-from-right duration-300">
                 <div className="flex justify-between items-center border-b pb-4 mb-4">
-                    <h2 className="text-xl font-bold text-gray-900">Your Bag ({cart.length})</h2>
+                    <h2 className="text-xl font-bold text-gray-900">Your Cart ({cart.length})</h2>
                     <button onClick={() => setIsCartOpen(false)} className="text-2xl text-gray-500 font-bold">✕</button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto space-y-4">
                     {cart.length === 0 ? (
-                        <p className="font-bold text-sm text-gray-900">Your bag is empty!</p>
+                        <p className="font-bold text-sm text-gray-900">Your Cart is empty!</p>
                     ) : (
                         cart.map((item, index) => (
                             <div key={index} className="flex gap-4 border-b pb-4">
