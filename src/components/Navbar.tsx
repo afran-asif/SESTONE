@@ -29,7 +29,7 @@ const Navbar = () => {
                 <div className="relative cursor-pointer">
                     <span className="text-xl">🛒</span>
                     <span className="absolute -top-2 -right-2 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                        {cart.length}
+                        {cart.reduce((total, item) => total + (item.quantity || 1), 0)}
                     </span>
                 </div>
                 </div>

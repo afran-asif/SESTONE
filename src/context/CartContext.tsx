@@ -1,31 +1,51 @@
 "use client";
-import React, { createContext , useContext , useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { Product } from '@/lib/data';
 
+export interface CartItem extends Product {
+    quantity: number;
+    selectedSize?: string;
+}
+
 interface CartContextType {
-    cart: Product[];
-    addToCart: (product: Product) => void;
-    removeFromCart: (id: number) => void;
-    isCartOpen : boolean;
-    setIsCartOpen : (open: boolean) => void;
+    cart: CartItem[];
+    addToCart: (product: CartItem) => void;
+    removeFromCart: (id: number, selectedSize?: string) => void;
+    isCartOpen: boolean;
+    setIsCartOpen: (open: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-    const [cart, setCart] = useState<Product[]>([]);
-    const [isCartOpen , setIsCartOpen ] = useState(false);
-    const removeFromCart = (id: number )=>{
-        setCart((prevCart) => prevCart.filter((item) => item.id !== id));
-    }
-    const addToCart = (product: Product) => {
-        setCart((prevCart) => 
-            [...prevCart, product]
-        );
-            setIsCartOpen(true);
-    }
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
-    return(
+    const removeFromCart = (id: number, selectedSize?: string) => {
+        setCart((prevCart) => prevCart.filter((item) => !(item.id === id && item.selectedSize === selectedSize)));
+    };
+
+    const addToCart = (newItem: CartItem) => {
+        setCart((prevCart) => {
+            const existingItemIndex = prevCart.findIndex(
+                (item) => item.id === newItem.id && item.selectedSize === newItem.selectedSize
+            );
+
+            if (existingItemIndex >= 0) {
+                const updatedCart = [...prevCart];
+                updatedCart[existingItemIndex] = {
+                    ...updatedCart[existingItemIndex],
+                    quantity: updatedCart[existingItemIndex].quantity + (newItem.quantity || 1)
+                };
+                return updatedCart;
+            } else {
+                return [...prevCart, { ...newItem, quantity: newItem.quantity || 1 }];
+            }
+        });
+        setIsCartOpen(true);
+    };
+
+    return (
         <CartContext.Provider value={{ cart, addToCart, removeFromCart, isCartOpen, setIsCartOpen }}>
             {children}
         </CartContext.Provider>

@@ -1,8 +1,8 @@
 "use client"
-import { useCart } from "@/context/CartContext";
-import { Product } from "@/lib/data"
+import { useCart, CartItem } from "@/context/CartContext";
 import toast from "react-hot-toast";
-const AddToCart = ({product} : {product : Product}) => {
+
+const AddToCart = ({product} : {product : CartItem}) => {
     const  { addToCart } = useCart();
 
     const handleAddToCart = () => {
