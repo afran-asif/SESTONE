@@ -32,8 +32,8 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
     }
 
     return (
-        <div className="bg-white min-h-screen pb-20 ">
-            <div className="max-w-6xl mx-auto p-6 md:p-10 mt-10 bg-gray-200 shadow-[0_10px_50px_rgba(0,0,0,0.05)] rounded-3xl flex flex-col md:flex-row gap-12 border-t-6 border-x-6 border-white">
+        <div className="bg-gray-200 min-h-screen pb-20 ">
+            <div className="max-w-6xl mx-auto p-6 mt-5 md:p-10 bg-gray-200 shadow-[0_10px_50px_rgba(0,0,0,0.05)] rounded-3xl flex flex-col md:flex-row gap-12 border-t-6 border-x-6 border-white">
 
                 <div className="flex-1 space-y-6">
                     <div className="bg-[#f9f9f9] rounded-2xl overflow-hidden group cursor-zoom-in">

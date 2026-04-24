@@ -1,6 +1,6 @@
 "use client";
 import { useCart } from "@/context/CartContext";
-
+import Link from "next/link";
 const CartDrawer = () => {
     const { cart, isCartOpen, setIsCartOpen, removeFromCart } = useCart();
 
@@ -44,7 +44,9 @@ const CartDrawer = () => {
                             <span>Total:</span>
                             <span>৳{cart.reduce((total, item) => total + item.price * (item.quantity || 1), 0)}</span>
                         </div>
-                        <button className="w-full bg-black text-white py-4 rounded-xl font-bold">Checkout Now</button>
+                        <Link href="/checkout" onClick={() => setIsCartOpen(false)}>
+                            <button className="w-full bg-black text-white py-4 rounded-xl font-bold">Checkout Now</button>
+                        </Link>
                     </div>
                 )}
             </div>
