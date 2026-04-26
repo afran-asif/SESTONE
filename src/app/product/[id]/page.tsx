@@ -60,10 +60,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
                 <div className="flex-1 space-y-8 py-4">
                     <div className="space-y-2">
-                        <p className="text-xs font-black uppercase tracking-[0.3em] text-orange-600">
+                        <p className="text-xs font-black uppercase tracking-[0.3em] text-blue-600">
                             {product.category}
                         </p>
-                        <h1 className="text-5xl font-black text-zinc-900 leading-[0.9] tracking-tighter uppercase">
+                        <h1 className="text-5xl font-black text-orange-600 leading-[0.9] tracking-tighter uppercase">
                             {product.title}
                         </h1>
                         <p className="text-3xl font-light text-zinc-800 pt-2 italic">

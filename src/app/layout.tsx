@@ -45,7 +45,7 @@ export default function RootLayout({
         </div>
 
         {/* Simple Footer */}
-        <footer className="bg-white border-t py-10 mt-10 text-center">
+        <footer className="bg-white border-t py-10  text-center">
           <p className="text-sm text-gray-500">
             © {new Date().getFullYear()} SESTONE. Built with Passion.
           </p>

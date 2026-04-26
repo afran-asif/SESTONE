@@ -10,7 +10,7 @@ export default function ShopPage() {
     ? products 
     : products.filter(p => p.category === selectedCategory);
 
-    const categories = ["All","Mens Clothing","Womens Clothing"];
+    const categories = ["All","Mens Clothing","Womens Clothing","Gadgets"];
 
     return (
         <div className="max-w-7xl mx-auto px-6 py-12">

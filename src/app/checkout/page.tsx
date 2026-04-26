@@ -16,7 +16,7 @@ export default function CheckoutPage() {
     const totalAmount = subtotal + (cart.length > 0 ? deliveryFee : 0);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-5 py-12">
         <h1 className="text-4xl text-orange-500 font-black uppercase italic mb-8">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -69,7 +69,7 @@ export default function CheckoutPage() {
                 <label className="block text-gray-700 text-sm font-bold mb-2">FULL ADDRESS:</label>
                 <textarea
                     className="w-full bg-gray-100 text-gray-700 placeholder-gray-400 p-4 outline-none focus:ring-2 focus:ring-black min-h-[120px]"
-                    placeholder="Enter your complete address"
+                    placeholder="Enter your complete address..."
                     required
                 />
                 </div>

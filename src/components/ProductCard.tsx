@@ -32,7 +32,7 @@ const ProductCard = ({ product }: props) => {
                 </span>
                 
                 <Link href={`/product/${product.id}`} className="w-full md:w-auto">
-                    <button className="w-full bg-orange-500 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg text-[10px] md:text-sm font-bold hover:bg-gray-800 transition active:scale-95 uppercase">
+                    <button className="w-full bg-orange-500 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg text-[10px] md:text-sm font-bold hover:bg-orange-600 transition active:scale-95 uppercase">
                         View Details
                     </button>
                 </Link>

@@ -33,10 +33,11 @@ export default function HomePage() {
           </div>
 
           <Image 
-            src="/2.png"
+            src="/2.jpeg"
             alt="Sestone Premium Wear"
             className="relative z-10 h-full w-full object-contain mb-5 drop-shadow-[0_35px_35px_rgba(0,0,0,0.3)] hover:scale-105 transition-transform duration-700"
             width={500} height={500}
+            priority
           />
         </div>
 
