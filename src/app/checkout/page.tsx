@@ -15,6 +15,35 @@ export default function CheckoutPage() {
     const subtotal = cart.reduce((total, item) => total + item.price * (item.quantity || 1), 0);
     const totalAmount = subtotal + (cart.length > 0 ? deliveryFee : 0);
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) =>{
+        e.preventDefault();
+
+        const orderData = {
+            fullName: (e.currentTarget.elements.namedItem("fullName") as HTMLInputElement).value,
+            phone: (e.currentTarget.elements.namedItem("phone") as HTMLInputElement).value,
+            address: (e.currentTarget.elements.namedItem("address") as HTMLTextAreaElement).value,
+            deliveryArea,
+            cartItems: cart,
+            subtotal,
+            deliveryFee,
+            totalAmount,
+        }
+        try {
+            const response = await fetch("/api/orders",{
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderData),
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(`অর্ডার সফল হয়েছে! আপনার অর্ডার আইডি: ${result.orderId}`);
+            }
+        } catch(error) {
+            alert("অর্ডার করার সময় কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+        }
+    };
+
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-5 py-12">
         <h1 className="text-4xl text-orange-500 font-black uppercase italic mb-8">Checkout</h1>
@@ -23,18 +52,12 @@ export default function CheckoutPage() {
             {/* Left Column Form */}
             <div>
             <h2 className="text-2xl text-orange-500 font-black uppercase italic mb-6">Shipping Details</h2>
-            <form className="space-y-6" onSubmit={(e) => {
-                e.preventDefault();
-                if (cart.length > 0) {
-                    alert("Order Confirmed!");
-                } else {
-                    alert("Your cart is empty!");
-                }
-            }}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2">FULL NAME:</label>
                 <input
                     type="text"
+                    name="fullName"
                     className="w-full bg-gray-100 text-gray-700 placeholder-gray-400 p-4 outline-none focus:ring-2 focus:ring-black"
                     placeholder="Enter your full name..."
                     required
@@ -44,6 +67,7 @@ export default function CheckoutPage() {
                 <label className="block text-gray-700 text-sm font-bold mb-2">PHONE NUMBER:</label>
                 <input
                     type="tel"
+                    name="phone"
                     className="w-full bg-gray-100 text-gray-700 placeholder-gray-400 p-4 outline-none focus:ring-2 focus:ring-black"
                     placeholder="Enter your phone number..."
                     required
@@ -68,6 +92,7 @@ export default function CheckoutPage() {
                 <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2">FULL ADDRESS:</label>
                 <textarea
+                    name="address"
                     className="w-full bg-gray-100 text-gray-700 placeholder-gray-400 p-4 outline-none focus:ring-2 focus:ring-black min-h-[120px]"
                     placeholder="Enter your complete address..."
                     required
