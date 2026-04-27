@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '@/lib/data';
 
 export interface CartItem extends Product {
@@ -14,6 +14,7 @@ interface CartContextType {
     clearCart: () => void;
     isCartOpen: boolean;
     setIsCartOpen: (open: boolean) => void;
+    isLoaded: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -21,6 +22,27 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    // Load cart from localStorage on mount
+    useEffect(() => {
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart) {
+            try {
+                setCart(JSON.parse(savedCart));
+            } catch (error) {
+                console.error('Failed to parse cart from localStorage:', error);
+            }
+        }
+        setIsLoaded(true);
+    }, []);
+
+    // Save cart to localStorage whenever it changes
+    useEffect(() => {
+        if (isLoaded) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+    }, [cart, isLoaded]);
 
     const clearCart = () => setCart([]);
 
@@ -49,7 +71,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, isCartOpen, setIsCartOpen }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, isCartOpen, setIsCartOpen, isLoaded }}>
             {children}
         </CartContext.Provider>
     );
