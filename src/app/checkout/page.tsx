@@ -3,9 +3,12 @@
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
-    const { cart } = useCart();
+    const { cart, clearCart } = useCart();
+    const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Delivery fee state
     const [deliveryArea, setDeliveryArea] = useState<"inside" | "outside">("inside");
@@ -17,6 +20,7 @@ export default function CheckoutPage() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
+        setIsSubmitting(true);
 
         const orderData = {
             fullName: (e.currentTarget.elements.namedItem("fullName") as HTMLInputElement).value,
@@ -37,10 +41,15 @@ export default function CheckoutPage() {
 
             const result = await response.json();
             if (result.success) {
-                alert(`অর্ডার সফল হয়েছে! আপনার অর্ডার আইডি: ${result.orderId}`);
+                clearCart();
+                router.push(`/thank-you/${result.orderId}`);
+            } else {
+                alert("অর্ডার করার সময় কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।");
             }
         } catch(error) {
             alert("অর্ডার করার সময় কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -101,9 +110,10 @@ export default function CheckoutPage() {
 
                 <button
                 type="submit"
-                className="w-full bg-black text-white font-bold tracking-widest uppercase py-4 mt-4 hover:scale-[1.02] transition-transform duration-200"
+                disabled={isSubmitting || cart.length === 0}
+                className="w-full bg-black text-white font-bold tracking-widest uppercase py-4 mt-4 hover:scale-[1.02] transition-transform duration-200 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed"
                 >
-                Confirm Order
+                {isSubmitting ? "Processing..." : "Confirm Order"}
                 </button>
             </form>
             </div>
