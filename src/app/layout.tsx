@@ -7,6 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import { Toaster } from "react-hot-toast";
 import ShopPage from "./shop/page";
+import AuthProvider from "@/components/AuthProvider";
 const geistSans = Geist({
   subsets: ["latin"],
   variable: "--font-geist-sans",
@@ -34,14 +35,14 @@ export default function RootLayout({
       >
 
         <div className="min-h-screen bg-gray-200">
-          <CartProvider>
-            <Navbar />
-            {/* <ShopPage /> */}
-            <CartDrawer />
-            <Toaster position="top-center" reverseOrder={false} />
-            {children}
-
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              <Navbar />
+              <CartDrawer />
+              <Toaster position="top-center" reverseOrder={false} />
+              {children}
+            </CartProvider>
+          </AuthProvider>
         </div>
 
         {/* Simple Footer */}
