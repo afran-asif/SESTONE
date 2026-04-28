@@ -20,7 +20,7 @@ const CartDrawer = () => {
 
                 <div className="flex-1 overflow-y-auto space-y-4">
                     {cart.length === 0 ? (
-                        <p className="font-bold text-sm text-gray-900">Your Cart is empty!</p>
+                        <p className="font-bold text-sm text-center mt-50 text-gray-900">Your Cart is empty!</p>
                     ) : (
                         cart.map((item, index) => (
                             <div key={index} className="flex gap-4 border-b pb-4">
