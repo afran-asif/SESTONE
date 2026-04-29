@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '@/lib/data';
+import { Quando } from 'next/font/google';
 
 export interface CartItem extends Product {
     quantity: number;
@@ -11,6 +12,7 @@ interface CartContextType {
     cart: CartItem[];
     addToCart: (product: CartItem) => void;
     removeFromCart: (id: number, selectedSize?: string) => void;
+    updateQuantity: (id: number, selectedSize: string | undefined, newQuantity: number) => void;
     clearCart: () => void;
     isCartOpen: boolean;
     setIsCartOpen: (open: boolean) => void;
@@ -49,7 +51,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const removeFromCart = (id: number, selectedSize?: string) => {
         setCart((prevCart) => prevCart.filter((item) => !(item.id === id && item.selectedSize === selectedSize)));
     };
-
+    const updateQuantity = (id: number, selectedSize: string | undefined , newQuantity : number) => {
+        if (newQuantity < 1){
+            removeFromCart(id, selectedSize);
+            return;
+        }
+        setCart((prevCart) => 
+            prevCart.map((item)=>
+                item.id === id && item.selectedSize === selectedSize 
+                    ? {...item, quantity: newQuantity}
+                    : item 
+            )
+        )
+    }
     const addToCart = (newItem: CartItem) => {
         setCart((prevCart) => {
             const existingItemIndex = prevCart.findIndex(
@@ -71,7 +85,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, isCartOpen, setIsCartOpen, isLoaded }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, isCartOpen, setIsCartOpen, isLoaded, updateQuantity }}>
             {children}
         </CartContext.Provider>
     );

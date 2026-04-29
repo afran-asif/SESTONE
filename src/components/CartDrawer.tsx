@@ -2,7 +2,7 @@
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 const CartDrawer = () => {
-    const { cart, isCartOpen, setIsCartOpen, removeFromCart } = useCart();
+    const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity} = useCart();
 
     if (!isCartOpen) return null;
 
@@ -31,8 +31,31 @@ const CartDrawer = () => {
                                     </h3>
                                     {item.selectedSize && <p className="text-xs text-gray-500">Size: {item.selectedSize}</p>}
                                     <p className="text-gray-600 font-medium">৳{item.price * (item.quantity || 1)}</p>
+                                    
+                                    <div className="flex items-center border border-zinc-200 rounded-lg w-fit mt-3 overflow-hidden">
+                                        <button 
+                                            onClick={() => updateQuantity(item.id, item.selectedSize, item.quantity - 1)}
+                                            className="px-3 py-1 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition-colors border-r border-zinc-200 font-medium"
+                                        >
+                                            −
+                                        </button>
+                                        <span className="px-4 py-1 text-sm font-bold text-zinc-900 bg-white">
+                                            {item.quantity}
+                                        </span>
+
+                                        
+                                        <button 
+                                            onClick={() => updateQuantity(item.id, item.selectedSize, item.quantity + 1)}
+                                            className="px-3 py-1 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition-colors border-l border-zinc-200 font-medium"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
                                 </div>
+                                <div>
                                 <button onClick={() => removeFromCart(item.id, item.selectedSize)} className="text-red-500 hover:text-red-700 font-bold px-2 self-start">✕</button>
+                                
+                                </div>
                             </div>
                         ))
                     )}
