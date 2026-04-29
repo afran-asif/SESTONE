@@ -33,3 +33,30 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 })
     }
 }
+
+export async function PATCH(req: Request) {
+    try{
+        await dbConnect();
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+        const session = await getServerSession();
+
+        if (!id) return NextResponse.json({ message: "ID missing"}, { status: 400});
+
+        const order = await Order.findById(id);
+        if (!order) return NextResponse.json({ message: "Order not found"}, { status: 404});
+
+        const isAdmin = session?.user?.email === process.env.ADMIN_EMAIL || session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
+        if(!isAdmin && order.status !== "Pending"){
+            return NextResponse.json({ message: "Only pending orders can be cancelled"}, { status: 400 });
+        } 
+
+        order.status = "Cancelled";
+        await order.save();
+
+        return NextResponse.json({ success: true, message: "Order Cancelled Successfully"})
+    } catch ( error: any){
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+}

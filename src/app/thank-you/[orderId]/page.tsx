@@ -2,8 +2,8 @@ import dbConnect from "@/lib/dbConnect";
 import Order from "@/models/Order";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import CancelOrderButton from "@/components/CancelOrderButton";
 
-// Define interface for the expected params
 interface PageProps {
   params: Promise<{
     orderId: string;
@@ -19,7 +19,6 @@ export default async function ThankYouPage({ params }: PageProps) {
   try {
     order = await Order.findById(orderId);
   } catch (error) {
-    // If orderId is not a valid ObjectId, it will throw an error
     return notFound();
   }
 
@@ -107,7 +106,12 @@ export default async function ThankYouPage({ params }: PageProps) {
             </div>
           </div>
         </div>
-
+        <div className="mb-8">
+            <CancelOrderButton 
+                orderId={order._id.toString()} 
+                initialStatus={order.status || "Pending"} 
+            />
+        </div>
         <Link 
           href="/" 
           className="inline-block bg-black text-white font-bold tracking-widest uppercase px-8 py-4 hover:scale-[1.02] transition-transform duration-200"
