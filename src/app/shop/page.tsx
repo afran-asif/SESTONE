@@ -1,10 +1,29 @@
 "use client"
-import { useState } from "react";
-import { products } from "@/lib/data";
+import { useState, useEffect } from "react";
+import { Product } from "@/lib/data";
 import ProductCard from "@/components/ProductCard";
 
 export default function ShopPage() {
     const [ selectedCategory, setSelectedCategory] = useState("All");
+    const [ products, setProducts ] = useState<Product[]>([]);
+    const [ isLoading, setIsLoading ] = useState(true);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch("/api/products");
+                if (res.ok) {
+                    const data = await res.json();
+                    setProducts(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch products:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchProducts();
+    }, []);
 
     const filteredProducts = selectedCategory === "All"
     ? products 
@@ -30,10 +49,14 @@ export default function ShopPage() {
                     </button>
                 ))}
             </div>
-            {filteredProducts.length > 0 ? (
+            {isLoading ? (
+                <div className="text-center py-20">
+                    <p className="text-gray-400 italic">Loading collection...</p>
+                </div>
+            ) : filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-10">
                     {filteredProducts.map((product) => (
-                        <ProductCard key={product.id} product={product} />
+                        <ProductCard key={product._id || product.id} product={product} />
                     ))}
                 </div>
             ):(

@@ -1,10 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-
+import { usePathname } from "next/navigation";
 const Navbar = () => {
 
     const { cart, setIsCartOpen } = useCart();
+    const pathname = usePathname();
+    const activeStyle = "text-orange-600 font-bold border-b-2 border-orange-600 pb-1";
+    const inactiveStyle = "text-gray-500 hover:text-blue-600 transition";
     return(
         <nav className="bg-white sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,10 +21,27 @@ const Navbar = () => {
                 {/* Navigation Links */}
                 <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-8 font-medium">
-                    <Link href="/" className="text-gray-500 hover:text-blue-600 transition">Home</Link>
-                    <Link href="/shop" className="text-gray-500 hover:text-blue-600 transition">Shop</Link>
-                    <Link href="/about" className="text-gray-500 hover:text-blue-600 transition">About</Link>
-                </div>
+                    <Link 
+                        href="/" 
+                        className={pathname === "/" ? activeStyle : inactiveStyle}
+                    >
+                        Home
+                    </Link>
+
+                    <Link 
+                        href="/shop" 
+                        className={pathname === "/shop" ? activeStyle : inactiveStyle}
+                    >
+                        Shop
+                    </Link>
+
+                    <Link 
+                        href="/about" 
+                        className={pathname === "/about" ? activeStyle : inactiveStyle}
+                    >
+                        About
+                    </Link>
+                    </div>
                 </div>
 
                 {/* Cart Icon (Dummy) */}

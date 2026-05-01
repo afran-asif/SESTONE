@@ -34,7 +34,7 @@ const CartDrawer = () => {
                                     
                                     <div className="flex items-center border border-zinc-200 rounded-lg w-fit mt-3 overflow-hidden">
                                         <button 
-                                            onClick={() => updateQuantity(item.id, item.selectedSize, item.quantity - 1)}
+                                            onClick={() => updateQuantity((item._id || item.id) as string | number, item.selectedSize, item.quantity - 1)}
                                             disabled={item.quantity <= 1}
                                             className="px-3 py-1 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition-colors border-r border-zinc-200 font-medium"
                                         >
@@ -44,9 +44,8 @@ const CartDrawer = () => {
                                             {item.quantity}
                                         </span>
 
-                                        
                                         <button 
-                                            onClick={() => updateQuantity(item.id, item.selectedSize, item.quantity + 1)}
+                                            onClick={() => updateQuantity((item._id || item.id) as string | number, item.selectedSize, item.quantity + 1)}
                                             className="px-3 py-1 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition-colors border-l border-zinc-200 font-medium"
                                         >
                                             +
@@ -54,7 +53,7 @@ const CartDrawer = () => {
                                     </div>
                                 </div>
                                 <div>
-                                <button onClick={() => removeFromCart(item.id, item.selectedSize)} className="text-red-500 hover:text-red-700 font-bold px-2 self-start">✕</button>
+                                <button onClick={() => removeFromCart((item._id || item.id) as string | number, item.selectedSize)} className="text-red-500 hover:text-red-700 font-bold px-2 self-start">✕</button>
                                 
                                 </div>
                             </div>

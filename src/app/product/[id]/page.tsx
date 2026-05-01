@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 import { useState, useEffect } from "react";
-import { products, Product } from "@/lib/data";
+import { Product } from "@/lib/data";
 import Link from "next/link";
 import AddToCart from "@/components/AddToCart";
 import Image from 'next/image';
@@ -10,11 +10,34 @@ import myProductImage from '../../image.png';
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = React.use(params);
     const id = resolvedParams.id;
-    const product = products.find((p) => p.id === parseInt(id));
+    
+    const [product, setProduct] = useState<Product | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState("");
 
     const [selectedSize, setSelectedSize] = useState("");
     const [quantity, setQuantity] = useState(1);
-    const [activeImage, setActiveImage] = useState(product?.image);
+    const [activeImage, setActiveImage] = useState("");
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const res = await fetch(`/api/products/${id}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setProduct(data);
+                    setActiveImage(data.image);
+                } else {
+                    setError("Product not found");
+                }
+            } catch (err) {
+                setError("Failed to fetch product");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchProduct();
+    }, [id]);
 
     useEffect(() => {
         if (product && product.sizes.length > 0) {
@@ -22,11 +45,15 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
         }
     }, [product])
 
-    if (!product) {
+    if (isLoading) {
+        return <div className="text-center py-20 text-gray-500">Loading product...</div>;
+    }
+
+    if (!product || error) {
         return (
-            <div>
-                <h1 className="text-2xl font-bold">Product Not Found!</h1>
-                <Link href="/shop" className=" text-blue-500 underline" >Back to Shop</Link>
+            <div className="text-center py-20">
+                <h1 className="text-2xl font-bold">{error || "Product Not Found!"}</h1>
+                <Link href="/shop" className="text-blue-500 underline" >Back to Shop</Link>
             </div>
         )
     }

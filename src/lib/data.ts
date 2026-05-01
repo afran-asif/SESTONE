@@ -1,11 +1,13 @@
 export interface Product {
-    id: number;
+    _id?: string;
+    id?: number;
     title: string;
     price: number;
     image: string;
     category: string;
     description: string;
     sizes: string[];
+    inStock?: boolean;
 }
 
 export const products: Product[] = [
@@ -71,6 +73,51 @@ export const products: Product[] = [
         image: "https://static-01.daraz.com.bd/p/c8dfbed4dab1e72faf9c1927f961e6ac.jpg",
         category: "Mens Clothing",
         description: "Men's Solid Colour Shirt Fabrics: Oxford Cotton Size: M, L,XL Made in Bangladesh Measurement: M=Chest-38, Length-28 L=Chest-40, Length-29 XL=Chest-42, Length-30 XxL=Chest-44, Length-31",
+        sizes: ["M", "L", "XL", "XXL"]
+    },
+    {
+        id: 8,
+        title: "DROP SHOULDER",
+        price: 550,
+        image: "",
+        category: "Mens Clothing",
+        description: "Premium oversized drop shoulder t-shirt made with heavy cotton for a stylish streetwear look.",
+        sizes: ["M", "L", "XL", "XXL"]
+    },
+    {
+        id: 9,
+        title: "DROP SHOULDER",
+        price: 550,
+        image: "",
+        category: "Mens Clothing",
+        description: "Premium oversized drop shoulder t-shirt made with heavy cotton for a stylish streetwear look.",
+        sizes: ["M", "L", "XL", "XXL"]
+    },
+    {
+        id: 10,
+        title: "DROP SHOULDER",
+        price: 550,
+        image: "",
+        category: "Mens Clothing",
+        description: "Premium oversized drop shoulder t-shirt made with heavy cotton for a stylish streetwear look.",
+        sizes: ["M", "L", "XL", "XXL"]
+    },
+    {
+        id: 11,
+        title: "DROP SHOULDER",
+        price: 550,
+        image: "",
+        category: "Mens Clothing",
+        description: "Premium oversized drop shoulder t-shirt made with heavy cotton for a stylish streetwear look.",
+        sizes: ["M", "L", "XL", "XXL"]
+    },
+    {
+        id: 12,
+        title: "DROP SHOULDER",
+        price: 550,
+        image: "https://gorurghash.com/wp-content/uploads/2024/09/Oversized-Drop-Shoulder-Solid-T-shirt-in-Ash-16.jpg",
+        category: "Mens Clothing",
+        description: "Premium oversized drop shoulder t-shirt made with heavy cotton for a stylish streetwear look.",
         sizes: ["M", "L", "XL", "XXL"]
     }
 ];

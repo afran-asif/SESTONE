@@ -11,8 +11,8 @@ export interface CartItem extends Product {
 interface CartContextType {
     cart: CartItem[];
     addToCart: (product: CartItem) => void;
-    removeFromCart: (id: number, selectedSize?: string) => void;
-    updateQuantity: (id: number, selectedSize: string | undefined, newQuantity: number) => void;
+    removeFromCart: (id: string | number, selectedSize?: string) => void;
+    updateQuantity: (id: string | number, selectedSize: string | undefined, newQuantity: number) => void;
     clearCart: () => void;
     isCartOpen: boolean;
     setIsCartOpen: (open: boolean) => void;
@@ -48,17 +48,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     const clearCart = () => setCart([]);
 
-    const removeFromCart = (id: number, selectedSize?: string) => {
-        setCart((prevCart) => prevCart.filter((item) => !(item.id === id && item.selectedSize === selectedSize)));
+    const removeFromCart = (id: string | number, selectedSize?: string) => {
+        setCart((prevCart) => prevCart.filter((item) => !((item._id || item.id) === id && item.selectedSize === selectedSize)));
     };
-    const updateQuantity = (id: number, selectedSize: string | undefined , newQuantity : number) => {
+    const updateQuantity = (id: string | number, selectedSize: string | undefined , newQuantity : number) => {
         if (newQuantity < 1){
             removeFromCart(id, selectedSize);
             return;
         }
         setCart((prevCart) => 
             prevCart.map((item)=>
-                item.id === id && item.selectedSize === selectedSize 
+                (item._id || item.id) === id && item.selectedSize === selectedSize 
                     ? {...item, quantity: newQuantity}
                     : item 
             )
@@ -66,8 +66,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
     const addToCart = (newItem: CartItem) => {
         setCart((prevCart) => {
+            const newItemId = newItem._id || newItem.id;
             const existingItemIndex = prevCart.findIndex(
-                (item) => item.id === newItem.id && item.selectedSize === newItem.selectedSize
+                (item) => (item._id || item.id) === newItemId && item.selectedSize === newItem.selectedSize
             );
 
             if (existingItemIndex >= 0) {
