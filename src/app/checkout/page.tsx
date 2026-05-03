@@ -1,14 +1,40 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
-    const { cart, clearCart } = useCart();
+    const { cart: contextCart, clearCart, removeFromCart } = useCart();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [isBuyNow, setIsBuyNow] = useState(false);
+    const [buyNowCart, setBuyNowCart] = useState<any[]>([]);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+        if (typeof window !== "undefined") {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("buyNow") === "true") {
+                setIsBuyNow(true);
+                const item = sessionStorage.getItem("buyNowItem");
+                if (item) {
+                    setBuyNowCart([JSON.parse(item)]);
+                }
+            } else if (urlParams.get("selectedCheckout") === "true") {
+                setIsBuyNow(true);
+                const items = sessionStorage.getItem("selectedCheckoutItems");
+                if (items) {
+                    setBuyNowCart(JSON.parse(items));
+                }
+            }
+        }
+    }, []);
+
+    const cart = isBuyNow ? buyNowCart : contextCart;
 
     // Delivery fee state
     const [deliveryArea, setDeliveryArea] = useState<"inside" | "outside">("inside");
@@ -41,7 +67,17 @@ export default function CheckoutPage() {
 
             const result = await response.json();
             if (result.success) {
-                clearCart();
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get("buyNow") === "true") {
+                    sessionStorage.removeItem("buyNowItem");
+                } else if (urlParams.get("selectedCheckout") === "true") {
+                    sessionStorage.removeItem("selectedCheckoutItems");
+                    buyNowCart.forEach(item => {
+                        removeFromCart(item._id || item.id, item.selectedSize);
+                    });
+                } else {
+                    clearCart();
+                }
                 router.push(`/thank-you/${result.orderId}`);
             } else {
                 alert("অর্ডার করার সময় কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।");
@@ -52,6 +88,8 @@ export default function CheckoutPage() {
             setIsSubmitting(false);
         }
     };
+
+    if (!isMounted) return <div className="text-center py-20 text-gray-500">Loading checkout...</div>;
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-5 py-12">

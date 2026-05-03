@@ -6,11 +6,16 @@ import Link from "next/link";
 import AddToCart from "@/components/AddToCart";
 import Image from 'next/image';
 import myProductImage from '../../image.png';
+import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
 
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = React.use(params);
     const id = resolvedParams.id;
-    
+
+    const { addToCart, setIsCartOpen } = useCart();
+    const router = useRouter();
+
     const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
@@ -57,6 +62,13 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             </div>
         )
     }
+
+    const handleBuyNow = () => {
+        if (!product) return;
+        const buyNowItem = { ...product, selectedSize, quantity };
+        sessionStorage.setItem("buyNowItem", JSON.stringify(buyNowItem));
+        router.push("/checkout?buyNow=true");
+    };
 
     return (
         <div className="bg-gray-200 min-h-screen pb-20 ">
@@ -113,8 +125,8 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                                     key={size}
                                     onClick={() => setSelectedSize(size)}
                                     className={`w-14 h-12 rounded-lg border text-sm font-bold transition-all duration-300 ${selectedSize === size
-                                            ? "bg-black text-white border-black shadow-xl"
-                                            : "bg-white text-zinc-800 border-zinc-200 hover:border-black"
+                                        ? "bg-black text-white border-black shadow-xl"
+                                        : "bg-white text-zinc-800 border-zinc-200 hover:border-black"
                                         }`}
                                 >
                                     {size}
@@ -132,8 +144,16 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                         </div>
                     </div>
 
-                    <div className="pt-8">
-                        <AddToCart product={{ ...product, selectedSize, quantity } as any} />
+                    <div className="pt-8 flex flex-col sm:flex-row gap-4">
+                        <div className="flex-1">
+                            <AddToCart product={{ ...product, selectedSize, quantity } as any} />
+                        </div>
+                        <button
+                            onClick={handleBuyNow}
+                            className="flex-1 bg-black text-white py-4 rounded-xl font-bold hover:bg-green-600 transition-all shadow-lg active:scale-95 uppercase tracking-widest text-sm"
+                        >
+                            Buy Now
+                        </button>
                     </div>
                 </div>
             </div>

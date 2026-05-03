@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 export default function AddProductPage() {
+
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState({ text: "", type: "" });
     const [formData, setFormData] = useState({
@@ -74,6 +75,8 @@ export default function AddProductPage() {
         }
     };
 
+
+
     return (
         <div className="min-h-screen bg-zinc-950 text-zinc-100 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
@@ -91,30 +94,30 @@ export default function AddProductPage() {
                 )}
 
                 <form onSubmit={handleSubmit} className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 shadow-2xl space-y-6">
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Title</label>
-                            <input 
+                            <input
                                 required
-                                type="text" 
+                                type="text"
                                 name="title"
                                 value={formData.title}
                                 onChange={handleChange}
-                                placeholder="e.g. DROP SHOULDER" 
+                                placeholder="e.g. DROP SHOULDER"
                                 className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
                             />
                         </div>
 
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Price (৳)</label>
-                            <input 
+                            <input
                                 required
-                                type="number" 
+                                type="number"
                                 name="price"
                                 value={formData.price}
                                 onChange={handleChange}
-                                placeholder="e.g. 550" 
+                                placeholder="e.g. 550"
                                 className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
                             />
                         </div>
@@ -122,13 +125,13 @@ export default function AddProductPage() {
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Image URL</label>
-                        <input 
+                        <input
                             required
-                            type="url" 
+                            type="url"
                             name="image"
                             value={formData.image}
                             onChange={handleChange}
-                            placeholder="https://example.com/image.jpg" 
+                            placeholder="https://example.com/image.jpg"
                             className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
                         />
                     </div>
@@ -136,7 +139,7 @@ export default function AddProductPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Category</label>
-                            <select 
+                            <select
                                 required
                                 name="category"
                                 value={formData.category}
@@ -151,8 +154,8 @@ export default function AddProductPage() {
                         </div>
                         <div className="space-y-2 flex flex-col justify-end">
                             <label className="flex items-center gap-3 cursor-pointer py-3">
-                                <input 
-                                    type="checkbox" 
+                                <input
+                                    type="checkbox"
                                     name="inStock"
                                     checked={formData.inStock}
                                     onChange={handleChange}
@@ -165,12 +168,12 @@ export default function AddProductPage() {
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Description</label>
-                        <textarea 
+                        <textarea
                             required
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
-                            placeholder="Enter product description..." 
+                            placeholder="Enter product description..."
                             rows={4}
                             className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all resize-none"
                         ></textarea>
@@ -184,11 +187,10 @@ export default function AddProductPage() {
                                     type="button"
                                     key={size}
                                     onClick={() => handleSizeToggle(size)}
-                                    className={`w-12 h-10 rounded-lg border text-xs font-bold transition-all duration-300 ${
-                                        formData.sizes.includes(size)
-                                            ? "bg-orange-500 text-white border-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.3)]"
-                                            : "bg-zinc-800 text-zinc-400 border-zinc-700 hover:border-zinc-500"
-                                    }`}
+                                    className={`w-12 h-10 rounded-lg border text-xs font-bold transition-all duration-300 ${formData.sizes.includes(size)
+                                        ? "bg-orange-500 text-white border-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.3)]"
+                                        : "bg-zinc-800 text-zinc-400 border-zinc-700 hover:border-zinc-500"
+                                        }`}
                                 >
                                     {size}
                                 </button>
@@ -199,23 +201,22 @@ export default function AddProductPage() {
                     <div className="pt-6 border-t border-zinc-800">
                         <div className="space-y-2 mb-6">
                             <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Admin Authentication</label>
-                            <input 
+                            <input
                                 required
-                                type="email" 
+                                type="email"
                                 name="adminEmail"
                                 value={formData.adminEmail}
                                 onChange={handleChange}
-                                placeholder="Enter admin email to authorize" 
+                                placeholder="Enter admin email to authorize"
                                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
                             />
                         </div>
 
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             disabled={isLoading}
-                            className={`w-full bg-orange-500 text-white px-8 py-4 rounded-xl font-bold uppercase tracking-widest transition-all ${
-                                isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-orange-600 active:scale-[0.98] shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]"
-                            }`}
+                            className={`w-full bg-orange-500 text-white px-8 py-4 rounded-xl font-bold uppercase tracking-widest transition-all ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-orange-600 active:scale-[0.98] shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]"
+                                }`}
                         >
                             {isLoading ? "Creating Product..." : "Create Product"}
                         </button>
