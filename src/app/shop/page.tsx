@@ -1,69 +1,16 @@
-"use client"
-import { useState, useEffect } from "react";
-import { Product } from "@/lib/data";
-import ProductCard from "@/components/ProductCard";
+import dbConnect from "@/lib/dbConnect";
+import ProductModel from "@/models/Product";
+import ShopClient from "./ShopClient";
 
-export default function ShopPage() {
-    const [ selectedCategory, setSelectedCategory] = useState("All");
-    const [ products, setProducts ] = useState<Product[]>([]);
-    const [ isLoading, setIsLoading ] = useState(true);
+export const revalidate = 60; // Revalidate the page every 60 seconds for fast performance
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const res = await fetch("/api/products");
-                if (res.ok) {
-                    const data = await res.json();
-                    setProducts(data);
-                }
-            } catch (error) {
-                console.error("Failed to fetch products:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchProducts();
-    }, []);
+export default async function ShopPage() {
+    await dbConnect();
+    // Fetch products directly from the database to avoid client-side loading
+    const rawProducts = await ProductModel.find({}).sort({ createdAt: -1 }).lean();
+    
+    // Parse it through JSON to safely serialize Mongoose ObjectIds and Dates to pass to Client Component
+    const products = JSON.parse(JSON.stringify(rawProducts));
 
-    const filteredProducts = selectedCategory === "All"
-    ? products 
-    : products.filter(p => p.category === selectedCategory);
-
-    const categories = ["All","Mens Clothing","Womens Clothing","Gadgets"];
-
-    return (
-        <div className="max-w-7xl mx-auto px-6 py-12">
-            <div className="text-center mb-12">
-                <h1 className="text-4xl font-black text-black tracking-tighter mb-4 uppercase">Sestone collection</h1>
-                <p className="text-gray-500">Discover your style from our premium streetwear and outfits.</p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-3 mb-12">
-                {categories.map((cat) => (
-                    <button key={cat} onClick={() => setSelectedCategory(cat)} 
-                    className={`px-8 py-2.5 rounded-full border text-sm font-bold transition-all duration-300 ${ 
-                        selectedCategory === cat
-                        ? "bg-orange-500 text-white border-orange-500 shadow-lg"
-                        : "bg-white text-black border-gray-200 hover:border-orange-500"
-                        }`}>
-                        {cat.toUpperCase()}
-                    </button>
-                ))}
-            </div>
-            {isLoading ? (
-                <div className="text-center py-20">
-                    <p className="text-gray-400 italic">Loading collection...</p>
-                </div>
-            ) : filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-10">
-                    {filteredProducts.map((product) => (
-                        <ProductCard key={product._id || product.id} product={product} />
-                    ))}
-                </div>
-            ):(
-                <div className="text-center py-20">
-                    <p className="text-gray-400 italic">No products found in this category.</p>
-                </div>
-            )}
-        </div>
-    )
+    return <ShopClient initialProducts={products} />;
 }
