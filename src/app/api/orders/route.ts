@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import Order from "@/models/Order";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import Product from "@/models/Product";
 
 export async function GET() {
     try {
@@ -25,8 +26,36 @@ export async function POST(req: Request) {
     try {
         await dbConnect();
         const data = await req.json();
+        const { cartItems } = data;
+
+        for(const item of cartItems ) {
+            const product = await Product.findById(item._id || item.id);
+            if (!product || product.stock <(item.quantity || 1)) {
+                return NextResponse.json({
+                    success: false,
+                    message: `${product?.title || "প্রোডাক্ট"} স্টকে নেই।`
+                },{ status: 400 });
+            }
+        }
 
         const newOrder = await Order.create(data);
+
+        for (const item of cartItems) {
+            const productId = item._id || item.id;
+            const quantityPurchased = item.quantity || 1;
+
+            await Product.findByIdAndUpdate(productId, {
+                $inc: { stock: -quantityPurchased }
+            });
+
+            const updatedProduct = await Product.findById(productId);
+            if(updatedProduct && updatedProduct.stock <= 0) {
+                await Product.findByIdAndUpdate(productId,{
+                    stock: 0,
+                    inStock: false
+                })
+            }
+        }
 
         return NextResponse.json({ success: true, orderId: newOrder._id }, { status: 201 });
     } catch (error: any) {
