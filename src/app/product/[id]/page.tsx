@@ -31,7 +31,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                 if (res.ok) {
                     const data = await res.json();
                     setProduct(data);
-                    setActiveImage(data.image);
+                    setActiveImage(data.images?.length ? data.images[0] : data.image);
                 } else {
                     setError("Product not found");
                 }
@@ -70,21 +70,31 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
         router.push("/checkout?buyNow=true");
     };
 
+    const isSoldOut = product.stock !== undefined ? product.stock <= 0 || !product.inStock : product.inStock === false;
+    const displayImages = product.images?.length ? product.images : [product.image];
+
     return (
         <div className="bg-gray-200 min-h-screen pb-20 ">
             <div className="max-w-6xl mx-auto p-6 mt-5 md:p-10 bg-gray-200 shadow-[0_10px_50px_rgba(0,0,0,0.05)] rounded-3xl flex flex-col md:flex-row gap-12 border-t-6 border-x-6 border-white">
 
                 <div className="flex-1 space-y-6">
-                    <div className="bg-[#f9f9f9] rounded-2xl overflow-hidden group cursor-zoom-in">
+                    <div className="relative bg-[#f9f9f9] rounded-2xl overflow-hidden group cursor-zoom-in">
                         <img
                             src={activeImage}
                             alt={product.title}
-                            className="w-full h-[500px] object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
+                            className={`w-full h-[500px] object-contain mix-blend-multiply transition-transform duration-700 ${!isSoldOut && 'group-hover:scale-105'} ${isSoldOut ? 'grayscale opacity-60' : ''}`}
                         />
+                        {isSoldOut && (
+                            <div className="absolute top-4 left-4 z-10">
+                                <span className="bg-red-600 text-white text-sm font-black px-4 py-2 rounded-full uppercase tracking-tighter shadow-lg">
+                                    Sold Out
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex gap-3 justify-center">
-                        {[product.image, product.image, product.image].map((img, index) => (
+                        {displayImages.map((img, index) => (
                             <button
                                 key={index}
                                 onClick={() => setActiveImage(img)}
@@ -146,13 +156,14 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
                     <div className="pt-8 flex flex-col sm:flex-row gap-4">
                         <div className="flex-1">
-                            <AddToCart product={{ ...product, selectedSize, quantity } as any} />
+                            <AddToCart product={{ ...product, selectedSize, quantity } as any} disabled={isSoldOut} />
                         </div>
                         <button
                             onClick={handleBuyNow}
-                            className="flex-1 bg-black text-white py-4 rounded-xl font-bold hover:bg-green-600 transition-all shadow-lg active:scale-95 uppercase tracking-widest text-sm"
+                            disabled={isSoldOut}
+                            className={`flex-1 py-4 rounded-xl font-bold transition-all shadow-lg uppercase tracking-widest text-sm ${isSoldOut ? 'bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-300' : 'bg-black text-white border border-black hover:bg-green-600 hover:border-green-600 active:scale-95'}`}
                         >
-                            Buy Now
+                            {isSoldOut ? 'Sold Out' : 'Buy Now'}
                         </button>
                     </div>
                 </div>

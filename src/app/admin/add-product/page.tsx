@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { UploadDropzone } from "@/lib/uploadthing";
 
 export default function AddProductPage() {
 
@@ -10,15 +11,28 @@ export default function AddProductPage() {
         title: "",
         price: "",
         image: "",
+        images: [] as string[],
         category: "",
         description: "",
         sizes: ["S", "M", "L", "XL", "XXL"], // Default sizes
+        stock: "10",
         inStock: true,
         adminEmail: ""
     });
 
     const categories = ["Mens Clothing", "Womens Clothing", "Gadgets", "Accessories"];
     const availableSizes = ["S", "M", "L", "XL", "XXL", "39", "40", "41", "42", "43", "44"];
+
+    const handleRemoveImage = (index: number) => {
+        setFormData(prev => {
+            const newImages = prev.images.filter((_, i) => i !== index);
+            return {
+                ...prev,
+                images: newImages,
+                image: newImages.length > 0 ? newImages[0] : ""
+            };
+        });
+    };
 
     const handleSizeToggle = (size: string) => {
         setFormData(prev => ({
@@ -41,6 +55,12 @@ export default function AddProductPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!formData.image) {
+            setMessage({ text: "Please upload at least one image before creating the product.", type: "error" });
+            return;
+        }
+
         setIsLoading(true);
         setMessage({ text: "", type: "" });
 
@@ -50,7 +70,9 @@ export default function AddProductPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     ...formData,
-                    price: parseFloat(formData.price)
+                    images: formData.images.filter(img => img.trim() !== ""),
+                    price: parseFloat(formData.price),
+                    stock: parseInt(formData.stock) || 0
                 }),
             });
 
@@ -63,7 +85,9 @@ export default function AddProductPage() {
                     title: "",
                     price: "",
                     image: "",
-                    description: ""
+                    images: [],
+                    description: "",
+                    stock: "10"
                 }));
             } else {
                 setMessage({ text: data.error || "Failed to add product.", type: "error" });
@@ -123,16 +147,47 @@ export default function AddProductPage() {
                         </div>
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Image URL</label>
-                        <input
-                            required
-                            type="url"
-                            name="image"
-                            value={formData.image}
-                            onChange={handleChange}
-                            placeholder="https://example.com/image.jpg"
-                            className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
+                    <div className="space-y-4">
+                        <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Product Images</label>
+                        
+                        {formData.images.length > 0 && (
+                            <div className="flex flex-wrap gap-4 mb-4">
+                                {formData.images.map((img, index) => (
+                                    <div key={index} className="relative w-24 h-24 rounded-xl overflow-hidden border-2 border-zinc-700">
+                                        <img src={img} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
+                                        <button 
+                                            type="button" 
+                                            onClick={() => handleRemoveImage(index)}
+                                            className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition-colors"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                        </button>
+                                        {index === 0 && (
+                                            <div className="absolute bottom-0 left-0 right-0 bg-orange-500 text-white text-[9px] font-bold text-center py-0.5">MAIN</div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <UploadDropzone
+                            endpoint="imageUploader"
+                            onClientUploadComplete={(res) => {
+                                const urls = res.map((file) => file.url);
+                                setFormData(prev => {
+                                    const newImages = [...prev.images, ...urls];
+                                    return {
+                                        ...prev,
+                                        images: newImages,
+                                        image: newImages.length > 0 ? newImages[0] : prev.image
+                                    };
+                                });
+                                setMessage({ text: "Images uploaded successfully!", type: "success" });
+                            }}
+                            onUploadError={(error: Error) => {
+                                setMessage({ text: `Upload Error: ${error.message}`, type: "error" });
+                            }}
+                            className="bg-zinc-800 border-2 border-dashed border-zinc-700 rounded-xl p-8 hover:border-orange-500 transition-colors ut-button:bg-orange-500 ut-button:ut-readying:bg-orange-500/50 ut-label:text-orange-500 ut-allowed-content:text-zinc-400"
                         />
                     </div>
 
@@ -153,7 +208,18 @@ export default function AddProductPage() {
                             </select>
                         </div>
                         <div className="space-y-2 flex flex-col justify-end">
-                            <label className="flex items-center gap-3 cursor-pointer py-3">
+                            <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Stock Quantity</label>
+                            <input
+                                required
+                                type="number"
+                                name="stock"
+                                value={formData.stock}
+                                onChange={handleChange}
+                                placeholder="e.g. 50"
+                                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
+                            />
+                            
+                            <label className="flex items-center gap-3 cursor-pointer py-2 mt-2">
                                 <input
                                     type="checkbox"
                                     name="inStock"

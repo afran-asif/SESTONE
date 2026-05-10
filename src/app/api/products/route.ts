@@ -16,7 +16,7 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { title, price, image, category, description, sizes, inStock, adminEmail } = body;
+        const { title, price, image, images, category, description, sizes, stock, inStock, adminEmail } = body;
 
         // Ensure process.env.ADMIN_EMAIL is set
         if (!process.env.ADMIN_EMAIL || adminEmail !== process.env.ADMIN_EMAIL) {
@@ -28,15 +28,17 @@ export async function POST(req: Request) {
             title,
             price,
             image,
+            images,
             category,
             description,
             sizes,
+            stock,
             inStock
         });
 
         return NextResponse.json({ success: true, product }, { status: 201 });
-    } catch (error) {
+    } catch (error: any) {
         console.error("POST /api/products error:", error);
-        return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
+        return NextResponse.json({ error: error?.message || 'Failed to create product' }, { status: 500 });
     }
 }

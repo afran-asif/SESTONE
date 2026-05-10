@@ -2,7 +2,7 @@
 import { useCart, CartItem } from "@/context/CartContext";
 import toast from "react-hot-toast";
 
-const AddToCart = ({product} : {product : CartItem}) => {
+const AddToCart = ({product, disabled} : {product : CartItem, disabled?: boolean}) => {
     const  { addToCart } = useCart();
 
     const handleAddToCart = () => {
@@ -20,8 +20,8 @@ const AddToCart = ({product} : {product : CartItem}) => {
         })
     }
     return(
-        <button onClick={ handleAddToCart } className="w-full bg-white text-black py-4 rounded-xl font-bold hover:bg-green-600 hover:text-white transition-all shadow-lg active:scale-95" >
-            Add to Cart
+        <button disabled={disabled} onClick={ handleAddToCart } className={`w-full py-4 rounded-xl font-bold transition-all shadow-lg uppercase tracking-widest text-sm ${disabled ? 'bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-300' : 'bg-white text-black border border-black hover:bg-green-600 hover:text-white hover:border-green-600 active:scale-95'}`} >
+            {disabled ? 'Sold Out' : 'Add to Cart'}
         </button>
     );
 };

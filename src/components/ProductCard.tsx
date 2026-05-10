@@ -1,41 +1,84 @@
 import { Product } from "@/lib/data";
 import Link from "next/link";
+import Image from "next/image"; // Next.js Image use kora bhalo performance-er jonno
 
 interface props {
-    product: Product;
+    product: any; // Interface context-er sathe milate any ba specific type use koro
 }
 
 const ProductCard = ({ product }: props) => {
+    // Stock check
+    const isSoldOut = product.stock <= 0 || !product.inStock;
+
     return (
-        <div key={product.id} className="bg-white p-3 md:p-5 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col justify-between h-full">
-            <div>
-                <div className="h-32 md:h-48 w-full bg-gray-50 rounded-xl overflow-hidden mb-3">
-                    <img
-                        src={product.image}
-                        alt={product.title}
-                        className="h-full w-full object-contain hover:scale-105 transition-transform duration-500"
-                    />
+        <div className="group relative bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col h-full">
+            
+            {/* Image Section with Badge */}
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-50">
+                <img
+                    src={product.image}
+                    alt={product.title}
+                    className={`h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 ${isSoldOut ? 'grayscale opacity-60' : ''}`}
+                />
+                
+                {/* Status Badges */}
+                <div className="absolute top-3 left-3 flex flex-col gap-2">
+                    {isSoldOut ? (
+                        <span className="bg-red-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">
+                            Sold Out
+                        </span>
+                    ) : product.stock < 5 ? (
+                        <span className="bg-orange-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg animate-pulse">
+                            Low Stock
+                        </span>
+                    ) : null}
                 </div>
 
-                <p className="text-[10px] md:text-xs text-blue-500 font-bold uppercase tracking-wider mb-1">
-                    {product.category}
-                </p>
-
-                <h2 className="text-xs md:text-sm font-black text-gray-700 line-clamp-2 min-h-[25px] md:min-h-[40px] leading-tight">
-                    {product.title}
-                </h2>
+                {/* Quick View Overlay (Desktop Only) */}
+                {!isSoldOut && (
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <Link href={`/product/${product._id || product.id}`} className="bg-white text-black px-6 py-2 rounded-full font-black text-xs uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl">
+                            View Shop
+                        </Link>
+                    </div>
+                )}
             </div>
 
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-                <span className="text-sm md:text-lg font-black text-gray-800">
-                    ৳{product.price}
-                </span>
+            {/* Content Section */}
+            <div className="p-4 md:p-6 flex flex-col flex-grow">
+                <div className="mb-auto">
+                    <div className="flex justify-between items-start mb-2">
+                        <span className="text-[10px] font-bold text-orange-500 uppercase tracking-[0.2em]">
+                            {product.category}
+                        </span>
+                    </div>
+                    
+                    <h2 className="text-sm md:text-base font-black text-zinc-900 leading-tight mb-4 group-hover:text-orange-500 transition-colors line-clamp-2">
+                        {product.title}
+                    </h2>
+                </div>
 
-                <Link href={`/product/${product._id || product.id}`} className="w-full md:w-auto">
-                    <button className="w-full bg-orange-500 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg text-[10px] md:text-sm font-bold hover:bg-orange-600 transition active:scale-95 uppercase">
-                        View Details
-                    </button>
-                </Link>
+                <div className=" border-t border-gray-50 flex items-center justify-between">
+                    <div className="flex flex-col">
+                        <span className="text-xs text-gray-400 font-medium uppercase">Price</span>
+                        <span className="text-lg font-black text-orange-500 italic">
+                            ৳{product.price}
+                        </span>
+                    </div>
+
+                    <Link href={`/product/${product._id || product.id}`}>
+                        <button 
+                            disabled={isSoldOut}
+                            className={`p-3 rounded-full transition-all duration-300 ${
+                                isSoldOut 
+                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                                : 'bg-zinc-900 text-white hover:bg-orange-500 hover:scale-110 shadow-md'
+                            }`}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </Link>
+                </div>
             </div>
         </div>
     );
