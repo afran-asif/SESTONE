@@ -113,7 +113,7 @@ export default async function ThankYouPage({ params }: PageProps) {
             />
         </div>
         <Link 
-          href="/" 
+          href="/shop" 
           className="inline-block bg-black text-white font-bold tracking-widest uppercase px-8 py-4 hover:scale-[1.02] transition-transform duration-200"
         >
           Continue Shopping

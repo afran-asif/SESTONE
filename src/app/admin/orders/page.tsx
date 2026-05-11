@@ -73,11 +73,23 @@ export default function AdminOrders() {
                                     </td>
 
                                     <td className="p-4 align-top">
-                                        {order.cartItems?.map((item: any, idx: number) => (
-                                            <div key={idx} className="text-xs bg-zinc-800 border border-zinc-700 px-2 py-1 rounded mb-1 inline-block mr-1">
-                                                {item.title} <span className="text-orange-400">({item.selectedSize})</span> x {item.quantity}
-                                            </div>
-                                        ))}
+                                        <div className="flex flex-col gap-2">
+                                            {order.cartItems?.map((item: any, idx: number) => (
+                                                <div key={idx} className="flex items-center gap-3 bg-zinc-800 border border-zinc-700 p-2 rounded">
+                                                    {item.image && (
+                                                        <img src={item.image} alt={item.title} className="w-12 h-12 object-cover rounded bg-white" />
+                                                    )}
+                                                    <div>
+                                                        <p className="text-sm font-bold text-white">{item.title}</p>
+                                                        <p className="text-xs text-zinc-400 mt-1">
+                                                            Size: <span className="text-orange-400 font-bold">{item.selectedSize}</span> | 
+                                                            {item.selectedColor && <span> Color: <span className="text-orange-400 font-bold">{item.selectedColor}</span> | </span>}
+                                                            Qty: <span className="text-orange-400 font-bold">{item.quantity}</span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </td>
 
                                     <td className="p-4 align-top text-right font-bold text-orange-500 text-lg">

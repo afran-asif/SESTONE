@@ -1,10 +1,10 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
 const OrderSchema = new Schema({
-    fullName: { type:String, required: true },
+    fullName: { type: String, required: true },
     phone: { type: String, required: true },
     address: { type: String, required: true },
-    deliveryArea: { type: String, required: true},
+    deliveryArea: { type: String, required: true },
     cartItems: [
         {
             title: String,

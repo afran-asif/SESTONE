@@ -21,6 +21,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
     const [error, setError] = useState("");
 
     const [selectedSize, setSelectedSize] = useState("");
+    const [selectedColor, setSelectedColor] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [activeImage, setActiveImage] = useState("");
 
@@ -65,7 +66,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
     const handleBuyNow = () => {
         if (!product) return;
-        const buyNowItem = { ...product, selectedSize, quantity };
+        const buyNowItem = { ...product, image: activeImage, selectedSize, selectedColor, quantity };
         sessionStorage.setItem("buyNowItem", JSON.stringify(buyNowItem));
         router.push("/checkout?buyNow=true");
     };
@@ -93,17 +94,24 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                         )}
                     </div>
 
-                    <div className="flex gap-3 justify-center">
-                        {displayImages.map((img, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setActiveImage(img)}
-                                className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${activeImage === img ? 'border-orange-500 scale-105 shadow-md' : 'border-gray-100 opacity-60 hover:opacity-100'
-                                    }`}
-                            >
-                                <img src={img} className="w-full h-full object-cover" />
-                            </button>
-                        ))}
+                    <div className="text-center">
+                        <div className="flex gap-3 justify-center">
+                            {displayImages.map((img, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setActiveImage(img)}
+                                    className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${activeImage === img ? 'border-orange-500 scale-105 shadow-md' : 'border-gray-100 opacity-60 hover:opacity-100'
+                                        }`}
+                                >
+                                    <img src={img} className="w-full h-full object-cover" />
+                                </button>
+                            ))}
+                        </div>
+                        {displayImages.length > 1 && (
+                            <p className="text-[10px] uppercase font-bold tracking-widest text-orange-500 mt-2 bg-orange-500/10 px-3 py-1 rounded-full animate-pulse">
+                                Select an image to choose your color
+                            </p>
+                        )}
                     </div>
                 </div>
 
@@ -156,7 +164,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
                     <div className="pt-8 flex flex-col sm:flex-row gap-4">
                         <div className="flex-1">
-                            <AddToCart product={{ ...product, selectedSize, quantity } as any} disabled={isSoldOut} />
+                            <AddToCart product={{ ...product, image: activeImage, selectedSize, selectedColor, quantity } as any} disabled={isSoldOut} />
                         </div>
                         <button
                             onClick={handleBuyNow}

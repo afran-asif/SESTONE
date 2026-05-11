@@ -55,7 +55,7 @@ export default function AddProductPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!formData.image) {
             setMessage({ text: "Please upload at least one image before creating the product.", type: "error" });
             return;
@@ -149,14 +149,14 @@ export default function AddProductPage() {
 
                     <div className="space-y-4">
                         <label className="text-xs font-bold uppercase tracking-wider text-zinc-400">Product Images</label>
-                        
+
                         {formData.images.length > 0 && (
                             <div className="flex flex-wrap gap-4 mb-4">
                                 {formData.images.map((img, index) => (
                                     <div key={index} className="relative w-24 h-24 rounded-xl overflow-hidden border-2 border-zinc-700">
                                         <img src={img} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
-                                        <button 
-                                            type="button" 
+                                        <button
+                                            type="button"
                                             onClick={() => handleRemoveImage(index)}
                                             className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition-colors"
                                         >
@@ -218,7 +218,7 @@ export default function AddProductPage() {
                                 placeholder="e.g. 50"
                                 className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
                             />
-                            
+
                             <label className="flex items-center gap-3 cursor-pointer py-2 mt-2">
                                 <input
                                     type="checkbox"

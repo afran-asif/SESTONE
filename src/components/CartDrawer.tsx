@@ -9,7 +9,7 @@ const CartDrawer = () => {
     const router = useRouter();
     const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
 
-    const getItemKey = (item: any) => `${item._id || item.id}-${item.selectedSize || ''}`;
+    const getItemKey = (item: any) => `${item._id || item.id}-${item.selectedSize || ''}-${item.selectedColor || ''}-${item.image || ''}`;
 
     useEffect(() => {
         if (isCartOpen) {
@@ -43,7 +43,7 @@ const CartDrawer = () => {
 
     return (
         <div className="fixed inset-0 z-[100] flex justify-end">
-            
+
             <div className="fixed inset-0 bg-black/50" onClick={() => setIsCartOpen(false)} />
 
 
@@ -61,48 +61,48 @@ const CartDrawer = () => {
                             const key = getItemKey(item);
                             const isSelected = selectedKeys.has(key);
                             return (
-                            <div key={index} className={`flex gap-4 border-b pb-4 transition-opacity ${isSelected ? '' : 'opacity-50'}`}>
-                                <div className="flex items-center">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={isSelected} 
-                                        onChange={() => handleToggleSelect(key)}
-                                        className="w-5 h-5 accent-black cursor-pointer"
-                                    />
-                                </div>
-                                <img src={item.image} className="w-20 h-20 object-contain bg-gray-50 rounded" />
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-sm text-gray-900">
-                                        {item.title} <span className="text-orange-500 font-bold ml-1">x{item.quantity}</span>
-                                    </h3>
-                                    {item.selectedSize && <p className="text-xs text-gray-500">Size: {item.selectedSize}</p>}
-                                    <p className="text-gray-600 font-medium">৳{item.price * (item.quantity || 1)}</p>
-                                    
-                                    <div className="flex items-center border border-zinc-200 rounded-lg w-fit mt-3 overflow-hidden">
-                                        <button 
-                                            onClick={() => updateQuantity((item._id || item.id) as string | number, item.selectedSize, item.quantity - 1)}
-                                            disabled={item.quantity <= 1}
-                                            className="px-3 py-1 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition-colors border-r border-zinc-200 font-medium"
-                                        >
-                                            −
-                                        </button>
-                                        <span className="px-4 py-1 text-sm font-bold text-zinc-900 bg-white">
-                                            {item.quantity}
-                                        </span>
+                                <div key={index} className={`flex gap-4 border-b pb-4 transition-opacity ${isSelected ? '' : 'opacity-50'}`}>
+                                    <div className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={isSelected}
+                                            onChange={() => handleToggleSelect(key)}
+                                            className="w-5 h-5 accent-black cursor-pointer"
+                                        />
+                                    </div>
+                                    <img src={item.image} className="w-20 h-20 object-contain bg-gray-50 rounded" />
+                                    <div className="flex-1">
+                                        <h3 className="font-bold text-sm text-gray-900">
+                                            {item.title} <span className="text-orange-500 font-bold ml-1">x{item.quantity}</span>
+                                        </h3>
+                                        {item.selectedSize && <p className="text-xs text-gray-500">Size: {item.selectedSize}</p>}
+                                        <p className="text-gray-600 font-medium">৳{item.price * (item.quantity || 1)}</p>
 
-                                        <button 
-                                            onClick={() => updateQuantity((item._id || item.id) as string | number, item.selectedSize, item.quantity + 1)}
-                                            className="px-3 py-1 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition-colors border-l border-zinc-200 font-medium"
-                                        >
-                                            +
-                                        </button>
+                                        <div className="flex items-center border border-zinc-200 rounded-lg w-fit mt-3 overflow-hidden">
+                                            <button
+                                                onClick={() => updateQuantity((item._id || item.id) as string | number, item.selectedSize, item.selectedColor, item.image, item.quantity - 1)}
+                                                disabled={item.quantity <= 1}
+                                                className="px-3 py-1 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition-colors border-r border-zinc-200 font-medium"
+                                            >
+                                                −
+                                            </button>
+                                            <span className="px-4 py-1 text-sm font-bold text-zinc-900 bg-white">
+                                                {item.quantity}
+                                            </span>
+
+                                            <button
+                                                onClick={() => updateQuantity((item._id || item.id) as string | number, item.selectedSize, item.selectedColor, item.image, item.quantity + 1)}
+                                                className="px-3 py-1 bg-zinc-50 hover:bg-zinc-100 text-zinc-600 transition-colors border-l border-zinc-200 font-medium"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button onClick={() => removeFromCart((item._id || item.id) as string | number, item.selectedSize, item.selectedColor, item.image)} className="text-red-500 hover:text-red-700 font-bold px-2 self-start">✕</button>
+
                                     </div>
                                 </div>
-                                <div>
-                                <button onClick={() => removeFromCart((item._id || item.id) as string | number, item.selectedSize)} className="text-red-500 hover:text-red-700 font-bold px-2 self-start">✕</button>
-                                
-                                </div>
-                            </div>
                             );
                         })
                     )}

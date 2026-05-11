@@ -6,13 +6,14 @@ import { Quando } from 'next/font/google';
 export interface CartItem extends Product {
     quantity: number;
     selectedSize?: string;
+    selectedColor?: string;
 }
 
 interface CartContextType {
     cart: CartItem[];
     addToCart: (product: CartItem) => void;
-    removeFromCart: (id: string | number, selectedSize?: string) => void;
-    updateQuantity: (id: string | number, selectedSize: string | undefined, newQuantity: number) => void;
+    removeFromCart: (id: string | number, selectedSize?: string, selectedColor?: string, image?: string) => void;
+    updateQuantity: (id: string | number, selectedSize: string | undefined, selectedColor: string | undefined, image: string | undefined, newQuantity: number) => void;
     clearCart: () => void;
     isCartOpen: boolean;
     setIsCartOpen: (open: boolean) => void;
@@ -48,19 +49,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     const clearCart = () => setCart([]);
 
-    const removeFromCart = (id: string | number, selectedSize?: string) => {
-        setCart((prevCart) => prevCart.filter((item) => !((item._id || item.id) === id && item.selectedSize === selectedSize)));
+    const removeFromCart = (id: string | number, selectedSize?: string, selectedColor?: string, image?: string) => {
+        setCart((prevCart) => prevCart.filter((item) => !((item._id || item.id) === id && item.selectedSize === selectedSize && item.selectedColor === selectedColor && item.image === image)));
     };
-    const updateQuantity = (id: string | number, selectedSize: string | undefined , newQuantity : number) => {
-        if (newQuantity < 1){
-            removeFromCart(id, selectedSize);
+    const updateQuantity = (id: string | number, selectedSize: string | undefined, selectedColor: string | undefined, image: string | undefined, newQuantity: number) => {
+        if (newQuantity < 1) {
+            removeFromCart(id, selectedSize, selectedColor, image);
             return;
         }
-        setCart((prevCart) => 
-            prevCart.map((item)=>
-                (item._id || item.id) === id && item.selectedSize === selectedSize 
-                    ? {...item, quantity: newQuantity}
-                    : item 
+        setCart((prevCart) =>
+            prevCart.map((item) =>
+                (item._id || item.id) === id && item.selectedSize === selectedSize && item.selectedColor === selectedColor && item.image === image
+                    ? { ...item, quantity: newQuantity }
+                    : item
             )
         )
     }
@@ -68,7 +69,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setCart((prevCart) => {
             const newItemId = newItem._id || newItem.id;
             const existingItemIndex = prevCart.findIndex(
-                (item) => (item._id || item.id) === newItemId && item.selectedSize === newItem.selectedSize
+                (item) => (item._id || item.id) === newItemId && item.selectedSize === newItem.selectedSize && item.selectedColor === newItem.selectedColor && item.image === newItem.image
             );
 
             if (existingItemIndex >= 0) {
