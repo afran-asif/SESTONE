@@ -171,7 +171,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                             disabled={isSoldOut}
                             className={`flex-1 py-4 rounded-xl font-bold transition-all shadow-lg uppercase tracking-widest text-sm ${isSoldOut ? 'bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-300' : 'bg-black text-white border border-black hover:bg-green-600 hover:border-green-600 active:scale-95'}`}
                         >
-                            {isSoldOut ? 'Sold Out' : 'Buy Now'}
+                            Buy Now!
                         </button>
                     </div>
                 </div>

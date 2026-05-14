@@ -47,20 +47,20 @@ const ProductCard = ({ product }: props) => {
             {/* Content Section */}
             <div className="p-4 md:p-6 flex flex-col flex-grow">
                 <div className="mb-auto">
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex justify-between items-start">
                         <span className="text-[10px] font-bold text-orange-500 uppercase tracking-[0.2em]">
                             {product.category}
                         </span>
                     </div>
                     
-                    <h2 className="text-sm md:text-base font-black text-zinc-900 leading-tight mb-4 group-hover:text-orange-500 transition-colors line-clamp-2">
+                    <h2 className="text-sm md:text-base font-black text-zinc-900 leading-tight mb-3 group-hover:text-orange-500 transition-colors line-clamp-2">
                         {product.title}
                     </h2>
                 </div>
 
-                <div className=" border-t border-gray-50 flex items-center justify-between">
+                <div className="  border-gray-50 flex items-center justify-between">
                     <div className="flex flex-col">
-                        <span className="text-xs text-gray-400 font-medium uppercase">Price</span>
+                        {/* <span className="text-xs text-gray-400 font-medium uppercase">Price</span> */}
                         <span className="text-lg font-black text-orange-500 italic">
                             ৳{product.price}
                         </span>
@@ -75,7 +75,7 @@ const ProductCard = ({ product }: props) => {
                                 : 'bg-zinc-900 text-white hover:bg-orange-500 hover:scale-110 shadow-md'
                             }`}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         </button>
                     </Link>
                 </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { UploadDropzone } from "@/lib/uploadthing";
+import Link from "next/link";
 
 export default function AddProductPage() {
 
@@ -108,7 +109,10 @@ export default function AddProductPage() {
                     <h1 className="text-3xl md:text-4xl font-black uppercase tracking-widest text-white mb-2">
                         Add <span className="text-orange-500">Product</span>
                     </h1>
-                    <p className="text-zinc-400 text-sm">Create a new product in the SESTONE catalog</p>
+                    <p className="text-zinc-400 text-sm mb-4">Create a new product in the SESTONE catalog</p>
+                    <Link href="/admin/products" className="inline-block bg-zinc-800 text-white px-6 py-2 rounded-full font-bold uppercase tracking-wider text-xs hover:bg-orange-500 transition-colors">
+                        Manage Existing Products
+                    </Link>
                 </div>
 
                 {message.text && (
